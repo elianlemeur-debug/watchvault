@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchVault — Marketplace de montres de luxe d'occasion</title>
+    <meta name="description" content="Achetez et vendez des montres de luxe d'occasion certifiées. Rolex, Patek Philippe, Audemars Piguet et plus — expertisées, authentifiées, garanties.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           VARIABLES GLOBALES & RESET
+        ============================================================ */
+        :root {
+            --bg:           #FAFAF5;
+            --bg-alt:       #F2EDE4;
+            --gold:         #4A7FD4;
+            --gold-light:   #6B9FE8;
+            --text:         #0D0D0D;
+            --text-sec:     #555555;
+            --border:       rgba(74,127,212,0.2);
+            --serif:        'Cormorant Garamond', Georgia, serif;
+            --sans:         'Barlow', system-ui, sans-serif;
+            --ease:         0.3s ease;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-weight: 300;
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+            animation: pageFadeIn 0.6s ease both;
+        }
+
+        /* ============================================================
+           CURSEUR PERSONNALISÉ
+        ============================================================ */
+        * { cursor: none !important; }
+        #cursor {
+            width: 8px; height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 999999;
+            will-change: transform;
+            transition: opacity .2s, width .15s ease, height .15s ease;
+        }
+        #cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid var(--gold);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 999998;
+            will-change: transform;
+            opacity: .55;
+            transition: opacity .2s, width .2s ease, height .2s ease;
+        }
+
+        /* ============================================================
+           UTILITAIRES
+        ============================================================ */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        section { padding: 7rem 0; }
+
+        .sec-label {
+            font-size: .7rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: .9rem;
+        }
+        .sec-title {
+            font-family: var(--serif);
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .gold-italic { color: var(--gold); font-style: italic; font-family: var(--serif); }
+        .divider { width: 56px; height: 1px; background: var(--gold); margin: 1.5rem 0; }
+
+        /* Boutons */
+        .btn {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .9rem 2rem;
+            font-family: var(--sans); font-size: .82rem;
+            letter-spacing: .1em; text-transform: uppercase;
+            font-weight: 400; text-decoration: none;
+            border: none; cursor: none;
+            transition: var(--ease);
+        }
+        .btn-primary  { background: var(--gold); color: #FFFFFF; }
+        .btn-primary:hover { background: var(--gold-light); }
+        .btn-ghost    { background: transparent; color: var(--text); border: 1px solid rgba(13,13,13,.2); }
+        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-outline  { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+        .btn-outline:hover { background: var(--gold); color: #0D0D0D; }
+
+        /* Scroll reveal */
+        .reveal { opacity: 0; transform: translateY(36px); transition: opacity .75s ease, transform .75s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
+        #nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+            padding: 1.6rem 0;
+            transition: var(--ease);
+        }
+        #nav.scrolled {
+            background: rgba(250,250,245,.97);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 20px rgba(13,13,13,.06);
+            padding: 1rem 0;
+        }
+        .nav-wrap { display: flex; align-items: center; justify-content: space-between; }
+
+        @keyframes logoFadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes logoUnderline {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+        @keyframes logoPulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: .35; }
+        }
+        .logo {
+            font-family: var(--serif);
+            font-size: 20px; letter-spacing: .15em;
+            color: #0D0D0D; text-decoration: none; font-weight: 300;
+            position: relative;
+            animation: logoFadeIn .7s ease both;
+        }
+        .logo::after {
+            content: '';
+            position: absolute; left: 0; bottom: -3px;
+            width: 100%; height: 1px;
+            background: #4A7FD4;
+            transform-origin: left;
+            animation: logoUnderline .8s ease-out .3s both;
+        }
+        .logo:hover::after {
+            animation: logoPulse 1.2s ease-in-out infinite;
+        }
+        .logo span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            font-size: .78rem; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--text-sec); text-decoration: none; transition: var(--ease);
+        }
+        .nav-links a:hover { color: var(--gold); }
+
+        .nav-cta { font-size: .75rem; padding: .6rem 1.5rem; }
+
+        /* Burger mobile */
+        .burger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; padding: 4px; }
+        .burger span { display: block; width: 22px; height: 1px; background: var(--text); transition: var(--ease); }
+
+        /* ============================================================
+           HERO
+        ============================================================ */
+        #hero {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            padding: 8rem 0 4rem;
+            position: relative; overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute; top: 0; right: 0; width: 55%; height: 100%;
+            background: radial-gradient(ellipse at 70% 50%, rgba(74,127,212,.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+        }
+        .hero-tag {
+            font-size: .7rem; letter-spacing: .3em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 1.5rem;
+        }
+        .hero-h1 {
+            font-family: var(--serif);
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 300; line-height: 1.05;
+            margin-bottom: 1.5rem;
+        }
+        .hero-desc {
+            font-size: 1rem; color: var(--text-sec);
+            max-width: 430px; line-height: 1.85; margin-bottom: 2.5rem;
+        }
+        .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+
+        .hero-stats {
+            display: flex; gap: 3rem;
+            padding-top: 2rem; border-top: 1px solid var(--border);
+        }
+        .stat-n { font-family: var(--serif); font-size: 2rem; color: var(--gold); line-height: 1; margin-bottom: .25rem; }
+        .stat-l { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-sec); }
+
+        /* Colonne droite hero : horloge + vidéo empilées */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.75rem;
+        }
+
+        /* Horloge */
+        .clock-wrap { display: flex; justify-content: center; align-items: center; }
+        .clock-svg { width: 320px; height: 320px; filter: drop-shadow(0 0 40px rgba(74,127,212,.35)) drop-shadow(0 8px 32px rgba(74,127,212,.2)); }
+
+        /* Vidéo */
+        .hero-video-wrap {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            animation: heroFadeIn 1s ease .5s both;
+        }
+        .hero-video-wrap video {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .hero-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(74,127,212,.1);
+            pointer-events: none;
+        }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           TICKER BOURSIER
+        ============================================================ */
+        #ticker {
+            background: #0A0F1E;
+            padding: .6rem 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(242,237,228,.06);
+            border-bottom: 1px solid rgba(242,237,228,.06);
+        }
+        .ticker-track {
+            display: flex; align-items: center; gap: 0;
+            width: max-content;
+            animation: tick 22s linear infinite;
+        }
+        @keyframes tick {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+        .tick-item {
+            display: inline-flex; align-items: center; gap: .45rem;
+            padding: 0 2rem;
+            font-family: var(--sans); font-size: .7rem;
+            letter-spacing: .1em; white-space: nowrap;
+        }
+        .tick-ref {
+            color: rgba(242,237,228,.65);
+            text-transform: uppercase; font-weight: 400;
+        }
+        .tick-up  { color: #4ade80; font-weight: 500; }
+        .tick-dn  { color: #f87171; font-weight: 500; }
+        .tick-sep {
+            color: rgba(242,237,228,.18);
+            font-size: .65rem; user-select: none;
+        }
+
+        /* ============================================================
+           MARQUEE
+        ============================================================ */
+        #marquee {
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-alt);
+            padding: 1.4rem 0;
+        }
+        .mq-track {
+            display: flex; gap: 3.5rem;
+            animation: mq 28s linear infinite;
+            width: max-content;
+        }
+        .mq-track:hover { animation-play-state: paused; }
+        .mq-item {
+            font-family: var(--serif); font-size: 1.05rem;
+            letter-spacing: .18em; text-transform: uppercase;
+            color: var(--text-sec); flex-shrink: 0; transition: var(--ease);
+        }
+        .mq-item:hover { color: var(--gold); }
+        .mq-dot { color: var(--gold); font-size: .45rem; align-self: center; flex-shrink: 0; }
+
+        @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ============================================================
+           COLLECTION
+        ============================================================ */
+        #collection { background: radial-gradient(ellipse at 50% 100%, rgba(74,127,212,.06) 0%, transparent 60%); }
+
+        .col-hd { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+
+        /* Barre de filtres */
+        .filter-bar {
+            display: flex; gap: .6rem; flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+        .filter-btn {
+            font-family: var(--sans); font-size: .72rem;
+            letter-spacing: .12em; text-transform: uppercase;
+            color: var(--text-sec); background: transparent;
+            border: 1px solid rgba(13,13,13,.15);
+            padding: .5rem 1.2rem;
+            transition: background .3s ease, border-color .3s ease, color .3s ease;
+        }
+        .filter-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+        .filter-btn.active { background: var(--gold); color: #FFFFFF; border-color: var(--gold); }
+
+        .cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem; }
+
+        .wcard {
+            background: #FFFFFF; border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+            transition: border-color .3s ease, box-shadow .3s ease, transform .35s ease, opacity .35s ease;
+            box-shadow: 0 2px 16px rgba(13,13,13,.05);
+        }
+        .wcard:hover { border-color: rgba(74,127,212,.55); transform: translateY(-5px); box-shadow: 0 10px 36px rgba(74,127,212,.15); }
+        .wcard.card-out { opacity: 0; transform: scale(0.93); pointer-events: none; }
+
+        /* Tooltip survol carte */
+        .wtooltip {
+            position: absolute; top: 12px; left: 12px;
+            z-index: 10;
+            background: #0A0F1E; color: #F2EDE4;
+            padding: 12px 16px; border-radius: 4px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.55);
+            font-family: var(--sans); line-height: 1.55;
+            opacity: 0; transform: translateY(-6px);
+            transition: opacity .2s ease, transform .2s ease;
+            pointer-events: none; white-space: nowrap;
+        }
+        .wcard:hover .wtooltip { opacity: 1; transform: translateY(0); }
+        .wtt-info {
+            font-size: .7rem; letter-spacing: .06em;
+            color: rgba(242,237,228,.6); margin-bottom: .3rem;
+        }
+        .wtt-cert { font-size: .73rem; color: #6B9FE8; }
+
+        .wimg {
+            width: 100%; height: 260px;
+            position: relative; overflow: hidden;
+        }
+        .wimg img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+            transition: transform .6s ease;
+        }
+        .wcard:hover .wimg img { transform: scale(1.05); }
+
+        .woverlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,.88);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: var(--ease);
+        }
+        .wcard:hover .woverlay { opacity: 1; }
+
+        .winfo { padding: 1.4rem; border-top: 1px solid var(--border); }
+        .wbrand { font-size: .68rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); margin-bottom: .35rem; }
+        .wname  { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; margin-bottom: .2rem; }
+        .wref   { font-size: .73rem; color: var(--text-sec); margin-bottom: 1rem; }
+        .wfoot  { display: flex; justify-content: space-between; align-items: center; }
+        .wprice { font-family: var(--serif); font-size: 1.55rem; color: var(--gold); }
+        .badge  { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; padding: .28rem .65rem; border: 1px solid; }
+        .b-cert { border-color: rgba(74,127,212,.4); color: var(--gold); }
+        .b-rare { border-color: rgba(200,140,140,.4); color: #C88888; }
+
+        /* ============================================================
+           COMMENT ÇA MARCHE
+        ============================================================ */
+        #hiw { background: var(--bg-alt); }
+
+        .hiw-hd { text-align: center; margin-bottom: 4rem; }
+        .hiw-hd .divider { margin: 1.5rem auto; }
+
+        .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.75rem; }
+
+        .step {
+            position: relative; padding: 2rem 1.4rem;
+            border: 1px solid var(--border); background: #FFFFFF;
+            text-align: center; transition: var(--ease);
+            box-shadow: 0 2px 12px rgba(13,13,13,.04);
+        }
+        .step:hover { border-color: var(--gold); background: rgba(74,127,212,.04); box-shadow: 0 6px 24px rgba(74,127,212,.12); }
+
+        .step-n {
+            font-family: var(--serif); font-size: 6rem; font-weight: 300;
+            color: rgba(74,127,212,.07);
+            position: absolute; top: .4rem; right: .9rem;
+            line-height: 1; pointer-events: none; user-select: none;
+        }
+        .step-ico {
+            width: 48px; height: 48px;
+            border: 1px solid var(--border); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 1.4rem; color: var(--gold); transition: var(--ease);
+        }
+        .step:hover .step-ico { border-color: var(--gold); background: rgba(74,127,212,.08); }
+        .step-t { font-family: var(--serif); font-size: 1.2rem; margin-bottom: .7rem; position: relative; }
+        .step-d { font-size: .84rem; color: var(--text-sec); line-height: 1.75; position: relative; }
+
+        /* ============================================================
+           TESTIMONIALS
+        ============================================================ */
+        #testimonials { background: var(--bg); }
+        .testi-hd { text-align: center; margin-bottom: 4rem; }
+        .testi-hd .divider { margin: 1.5rem auto; }
+
+        .testi-grid {
+            display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem;
+        }
+        .tcard {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            padding: 2rem 1.75rem;
+            box-shadow: 0 2px 16px rgba(13,13,13,.04);
+            transition: border-color .3s ease, box-shadow .3s ease;
+            display: flex; flex-direction: column; gap: 1.25rem;
+        }
+        .tcard:hover {
+            border-color: rgba(74,127,212,.4);
+            box-shadow: 0 8px 32px rgba(74,127,212,.1);
+        }
+
+        .tcard-top { display: flex; align-items: center; gap: 1rem; }
+        .tavatar {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: var(--gold);
+            display: flex; justify-content: center; align-items: center;
+            flex-shrink: 0;
+            font-family: var(--serif); font-size: 1.1rem; font-weight: 500;
+            color: #FFFFFF; letter-spacing: .04em;
+        }
+        .tname  { font-family: var(--serif); font-size: 1rem; font-weight: 400; }
+        .tcity  { font-size: .72rem; color: var(--text-sec); letter-spacing: .08em; margin-top: .1rem; }
+
+        .tstars { display: flex; gap: 2px; }
+        .tstars span { color: #F5A623; font-size: .85rem; }
+
+        .ttext {
+            font-size: .87rem; color: var(--text-sec);
+            line-height: 1.8; font-style: italic;
+            border-left: 2px solid var(--border);
+            padding-left: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .testi-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .testi-grid { gap: 1.25rem; }
+        }
+
+        /* ============================================================
+           MARQUES
+        ============================================================ */
+        #brands { border-top: 1px solid var(--border); }
+        .brands-hd { text-align: center; margin-bottom: 3.5rem; }
+
+        .brands-grid {
+            display: grid; grid-template-columns: repeat(5,1fr);
+            border: 1px solid var(--border);
+        }
+        .brand-item {
+            padding: 2rem 1.5rem; text-align: center;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            transition: var(--ease); cursor: none;
+        }
+        .brand-item:nth-child(5n) { border-right: none; }
+        .brand-item:nth-child(n+6) { border-bottom: none; }
+        .brand-item:hover { background: rgba(74,127,212,.04); }
+        .brand-n {
+            font-family: var(--serif); font-size: 1.05rem;
+            letter-spacing: .12em; text-transform: uppercase;
+            color: var(--text-sec); transition: var(--ease);
+        }
+        .brand-item:hover .brand-n { color: var(--gold); }
+        .brand-c { font-size: .68rem; color: rgba(85,85,85,.5); margin-top: .25rem; letter-spacing: .08em; }
+
+        /* ============================================================
+           FORMULAIRE
+        ============================================================ */
+        #subscribe { background: var(--bg-alt); border-top: 1px solid var(--border); }
+
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+
+        .feat { display: flex; align-items: flex-start; gap: 1rem; margin-top: 1.75rem; }
+        .feat-ico { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+        .feat-t strong { display: block; font-weight: 400; font-size: .9rem; margin-bottom: .15rem; }
+        .feat-t span   { font-size: .8rem; color: var(--text-sec); }
+
+        /* Form fields */
+        .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .fgrp { position: relative; }
+        .fgrp.fw { grid-column: 1 / -1; }
+
+        label {
+            display: block; font-size: .73rem; letter-spacing: .12em;
+            text-transform: uppercase; color: var(--text-sec); margin-bottom: .45rem;
+        }
+        .req { color: #C62828; margin-left: 2px; }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%; background: #FFFFFF; border: 1px solid rgba(13,13,13,.18);
+            color: var(--text); font-family: var(--sans); font-size: .9rem;
+            font-weight: 300; padding: .82rem 1rem; outline: none;
+            transition: var(--ease); appearance: none; -webkit-appearance: none;
+        }
+        input::placeholder { color: rgba(85,85,85,.4); }
+        input:focus, select:focus { border-color: var(--gold); background: #FAFAF5; box-shadow: 0 0 0 3px rgba(74,127,212,.1); }
+        input.valid  { border-color: #4CAF50 !important; }
+        input.error  { border-color: #E05555 !important; }
+        select.valid { border-color: #4CAF50 !important; }
+        select.error { border-color: #E05555 !important; }
+
+        .ferr { font-size: .71rem; color: #C62828; margin-top: .3rem; display: none; }
+        .ferr.show { display: block; }
+
+        .sel-wrap { position: relative; }
+        .sel-wrap::after {
+            content: ''; position: absolute; right: 1rem; top: 50%;
+            width: 7px; height: 7px;
+            border-right: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
+            transform: translateY(-70%) rotate(45deg); pointer-events: none;
+        }
+
+        /* Honeypot invisible */
+        .hp { position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; }
+
+        /* Bouton submit */
+        .btn-sub {
+            width: 100%; padding: 1rem;
+            background: var(--gold); color: #FFFFFF;
+            font-family: var(--sans); font-size: .83rem; font-weight: 500;
+            letter-spacing: .15em; text-transform: uppercase;
+            border: none; cursor: none; transition: var(--ease);
+            display: flex; justify-content: center; align-items: center; gap: .7rem;
+            margin-top: 1.2rem;
+        }
+        .btn-sub:hover:not(:disabled) { background: var(--gold-light); }
+        .btn-sub:disabled { opacity: .55; cursor: not-allowed; }
+
+        .spin {
+            width: 15px; height: 15px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #FFFFFF; border-radius: 50%;
+            animation: spin .65s linear infinite; display: none;
+        }
+        .btn-sub.loading .spin    { display: block; }
+        .btn-sub.loading .btn-txt { opacity: .65; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Messages feedback */
+        .fmsg {
+            margin-top: .9rem; padding: .85rem 1.1rem;
+            font-size: .84rem; border-left: 3px solid; display: none;
+        }
+        .fmsg.ok  { display: block; background: rgba(46,125,50,.07);  border-color: #2e7d32; color: #2e7d32; }
+        .fmsg.err { display: block; background: rgba(198,40,40,.07);  border-color: #C62828; color: #C62828; }
+
+        .rgpd { font-size: .7rem; color: rgba(85,85,85,.65); margin-top: .9rem; line-height: 1.65; }
+        .rgpd a { color: rgba(74,127,212,.65); text-decoration: underline; }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        #footer { padding: 5rem 0 2rem; border-top: 1px solid var(--border); background: var(--bg-alt); }
+
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem; padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border); margin-bottom: 2rem;
+        }
+        .ft-desc { font-size: .84rem; color: var(--text-sec); line-height: 1.8; max-width: 260px; margin: 1rem 0 1.5rem; }
+        .ft-social { display: flex; gap: .65rem; }
+        .soc {
+            width: 36px; height: 36px; border: 1px solid var(--border);
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-sec); text-decoration: none; transition: var(--ease);
+        }
+        .soc:hover { border-color: var(--gold); color: var(--gold); }
+
+        .ft-col h4 {
+            font-family: var(--sans); font-size: .68rem;
+            letter-spacing: .25em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 1.4rem;
+        }
+        .ft-links { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+        .ft-links a { font-size: .84rem; color: var(--text-sec); text-decoration: none; transition: var(--ease); }
+        .ft-links a:hover { color: var(--gold); }
+
+        .ft-bot { display: flex; justify-content: space-between; align-items: center; }
+        .ft-copy { font-size: .73rem; color: rgba(85,85,85,.55); }
+        .ft-leg { display: flex; gap: 1.5rem; }
+        .ft-leg a { font-size: .73rem; color: rgba(85,85,85,.55); text-decoration: none; transition: var(--ease); }
+        .ft-leg a:hover { color: var(--gold); }
+
+        /* ============================================================
+           GRAIN & BARRE DE PROGRESSION
+        ============================================================ */
+        #grain {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9998;
+            opacity: .03;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+        #read-bar {
+            position: fixed; top: 0; right: 0;
+            width: 2px; height: 0%;
+            background: #4A7FD4;
+            pointer-events: none; z-index: 9997;
+            transform-origin: top;
+            will-change: height;
+        }
+
+        /* ============================================================
+           BANNIÈRE DE CONFIRMATION EMAIL
+        ============================================================ */
+        #confirmed-banner {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            background: var(--gold);
+            color: #FFFFFF;
+            text-align: center;
+            padding: 1rem 2rem;
+            font-family: var(--sans);
+            font-size: .88rem;
+            letter-spacing: .04em;
+            box-shadow: 0 2px 20px rgba(74,127,212,.25);
+            animation: bannerSlide .4s cubic-bezier(.22,.68,0,1.2) both;
+        }
+        #confirmed-banner.visible { display: flex; justify-content: center; align-items: center; gap: 1rem; }
+        #confirmed-banner .banner-close {
+            background: none; border: none; color: #FFFFFF; cursor: pointer;
+            opacity: .7; font-size: 1.1rem; line-height: 1; padding: 0 0 0 .5rem;
+            transition: opacity .2s;
+        }
+        #confirmed-banner .banner-close:hover { opacity: 1; }
+        @keyframes bannerSlide {
+            from { opacity: 0; transform: translateY(-100%); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           RESPONSIVE — TABLETTE (≤ 1024px)
+        ============================================================ */
+        @media (max-width: 1024px) {
+            .hero-grid    { grid-template-columns: 1fr; }
+            .hero-right   { display: none; }
+            .cards        { grid-template-columns: repeat(2,1fr); }
+            .steps        { grid-template-columns: repeat(2,1fr); }
+            .brands-grid  { grid-template-columns: repeat(3,1fr); }
+            .brand-item:nth-child(3n)  { border-right: none; }
+            .brand-item:nth-child(5n)  { border-right: 1px solid var(--border); }
+            .footer-grid  { grid-template-columns: 1fr 1fr; }
+            .sub-grid     { grid-template-columns: 1fr; gap: 3rem; }
+        }
+
+        /* ============================================================
+           RESPONSIVE — MOBILE (≤ 768px)
+        ============================================================ */
+        @media (max-width: 768px) {
+            section { padding: 4rem 0; }
+
+            .nav-links {
+                display: none; position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(250,250,245,.98); flex-direction: column;
+                padding: 1.5rem 2rem; gap: 1.2rem;
+                border-top: 1px solid var(--border);
+            }
+            .nav-links.open { display: flex; }
+            .nav-cta        { display: none; }
+            .burger         { display: flex; }
+
+            #hero       { padding: 6rem 0 3rem; }
+            .hero-h1    { font-size: 2.8rem; }
+            .hero-stats { gap: 1.5rem; }
+
+            .cards, .steps { grid-template-columns: 1fr; }
+            .brands-grid   { grid-template-columns: repeat(2,1fr); }
+            .brand-item:nth-child(2n) { border-right: none; }
+
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .ft-bot { flex-direction: column; gap: 1rem; text-align: center; }
+
+            .fgrid { grid-template-columns: 1fr; }
+            .fgrp.fw { grid-column: 1; }
+
+            .col-hd { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+        }
+
+        /* ============================================================
+           RESPONSIVE — PETIT MOBILE (≤ 480px)
+        ============================================================ */
+        @media (max-width: 480px) {
+            .container   { padding: 0 1.25rem; }
+            section      { padding: 3rem 0; }
+
+            /* Navbar */
+            #nav         { padding: 1.1rem 0; }
+
+            /* Hero */
+            #hero        { padding: 5rem 0 2.5rem; min-height: auto; }
+            .hero-h1     { font-size: 2.1rem; }
+            .hero-tag    { margin-bottom: 1rem; }
+            .hero-desc   { font-size: .9rem; margin-bottom: 1.75rem; }
+            .hero-btns   {
+                flex-direction: column; gap: .75rem; margin-bottom: 2.5rem;
+            }
+            .hero-btns .btn { width: 100%; justify-content: center; display: flex; }
+            .hero-stats  { flex-direction: column; gap: .85rem; }
+            .stat-n      { font-size: 1.65rem; }
+
+            /* Titres de section */
+            .sec-title   { font-size: 1.85rem; }
+
+            /* Cartes */
+            .wimg        { height: 210px; }
+
+            /* Étapes HIW */
+            .step        { padding: 1.5rem 1.1rem; }
+            .step-n      { font-size: 4.5rem; }
+
+            /* Marques — 1 colonne pour éviter le débordement */
+            .brands-grid { grid-template-columns: 1fr; }
+            .brand-item  {
+                border-right: none !important;
+                border-bottom: 1px solid var(--border) !important;
+                padding: 1rem 1.5rem;
+            }
+            .brand-item:last-child { border-bottom: none !important; }
+
+            /* Footer */
+            #footer      { padding: 3rem 0 1.5rem; }
+            .footer-grid { gap: 1.5rem; }
+            .ft-bot      { gap: .5rem; }
+            .ft-copy, .ft-leg a { font-size: .68rem; }
+        }
+
+        /* ============================================================
+           ÉCRANS TACTILES — restaure le curseur natif
+        ============================================================ */
+        @media (hover: none), (pointer: coarse) {
+            * { cursor: auto !important; }
+            body { cursor: auto; }
+            #cursor, #cursor-ring { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- BANNIÈRE CONFIRMATION EMAIL -->
+<div id="confirmed-banner" role="status" aria-live="polite">
+    <span>✓ Email confirmé&nbsp;! Votre guide arrive dans quelques secondes.</span>
+    <button class="banner-close" onclick="this.parentElement.classList.remove('visible')" aria-label="Fermer">✕</button>
+</div>
+
+<!-- GRAIN & PROGRESSION -->
+<div id="grain"    aria-hidden="true"></div>
+<div id="read-bar" aria-hidden="true"></div>
+
+<!-- CURSEUR -->
+<div id="cursor"      aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<nav id="nav" aria-label="Navigation principale">
+    <div class="container">
+        <div class="nav-wrap">
+            <a href="#" class="logo" aria-label="WatchVault — Accueil">Watch<span>VAULT</span></a>
+
+            <ul class="nav-links" id="nav-links" role="list">
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#brands">Marques</a></li>
+                <li><a href="#subscribe">Vendre</a></li>
+                <li><a href="#hiw">Expertise</a></li>
+            </ul>
+
+            <a href="#subscribe" class="btn btn-outline nav-cta">Commencer</a>
+
+            <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+    <div class="container">
+        <div class="hero-grid">
+
+            <!-- Gauche : contenu -->
+            <div>
+                <p class="hero-tag reveal">Marketplace de confiance depuis 2012</p>
+
+                <h1 class="hero-h1 reveal">
+                    L'horlogerie<br>de luxe
+                    <em class="gold-italic"> réinventée</em>
+                </h1>
+
+                <p class="hero-desc reveal">
+                    Achetez et vendez des montres de collection certifiées.
+                    Chaque pièce expertisée, authentifiée, garantie par nos horlogers.
+                </p>
+
+                <div class="hero-btns reveal">
+                    <a href="#collection" class="btn btn-primary">Explorer la collection</a>
+                    <a href="#hiw" class="btn btn-ghost">
+                        Comment ça marche
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <div class="hero-stats reveal">
+                    <div><div class="stat-n" data-count="4200" data-suffix="" data-sep=" ">4 200</div><div class="stat-l">Pièces disponibles</div></div>
+                    <div><div class="stat-n" data-count="98"   data-suffix="%"              >98%</div><div class="stat-l">Satisfaction client</div></div>
+                    <div><div class="stat-n" data-count="12"   data-suffix=" ans"           >12 ans</div><div class="stat-l">D'expertise</div></div>
+                </div>
+            </div>
+
+            <!-- Droite : horloge + vidéo -->
+            <div class="hero-right">
+            <div class="clock-wrap" aria-label="Horloge affichant l'heure réelle">
+                <svg class="clock-svg" viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <!-- Fond et cercles décoratifs -->
+                    <circle cx="190" cy="190" r="188" fill="#0D0D0D" stroke="rgba(74,127,212,.3)" stroke-width="1"/>
+                    <circle cx="190" cy="190" r="172" fill="none" stroke="rgba(74,127,212,.1)"  stroke-width="1"/>
+                    <circle cx="190" cy="190" r="165" fill="none" stroke="rgba(74,127,212,.05)" stroke-width=".6"/>
+                    <circle cx="190" cy="190" r="150" fill="none" stroke="rgba(74,127,212,.04)" stroke-width=".5"/>
+
+                    <!-- Graduations des heures (12 barres épaisses) -->
+                    <g stroke="rgba(74,127,212,.75)" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(0   190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(30  190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(60  190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(90  190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(120 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(150 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(180 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(210 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(240 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(270 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(300 190 190)"/>
+                        <line x1="190" y1="24" x2="190" y2="52" transform="rotate(330 190 190)"/>
+                    </g>
+
+                    <!-- Graduations des minutes (60 barres fines) -->
+                    <g id="min-ticks" stroke="rgba(74,127,212,.22)" stroke-width="1" stroke-linecap="round"></g>
+
+                    <!-- Chiffres romains -->
+                    <text x="190" y="76"  text-anchor="middle" fill="rgba(74,127,212,.72)" font-family="Cormorant Garamond,serif" font-size="18" font-weight="300">XII</text>
+                    <text x="299" y="196" text-anchor="middle" fill="rgba(74,127,212,.72)" font-family="Cormorant Garamond,serif" font-size="18" font-weight="300">III</text>
+                    <text x="190" y="316" text-anchor="middle" fill="rgba(74,127,212,.72)" font-family="Cormorant Garamond,serif" font-size="18" font-weight="300">VI</text>
+                    <text x="81"  y="196" text-anchor="middle" fill="rgba(74,127,212,.72)" font-family="Cormorant Garamond,serif" font-size="18" font-weight="300">IX</text>
+
+                    <!-- Signatures cadran -->
+                    <text x="190" y="237" text-anchor="middle" fill="rgba(74,127,212,.35)" font-family="Barlow,sans-serif" font-size="8" letter-spacing="4">WATCHVAULT</text>
+                    <text x="190" y="251" text-anchor="middle" fill="rgba(136,136,136,.25)" font-family="Barlow,sans-serif" font-size="7" letter-spacing="2">SWISS MADE</text>
+
+                    <!-- Aiguille des heures -->
+                    <g id="h-hand">
+                        <line x1="190" y1="190" x2="190" y2="115"
+                              stroke="rgba(250,248,244,.95)" stroke-width="3.5" stroke-linecap="round"/>
+                        <line x1="190" y1="190" x2="190" y2="210"
+                              stroke="rgba(250,248,244,.5)"  stroke-width="3"   stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Aiguille des minutes -->
+                    <g id="m-hand">
+                        <line x1="190" y1="190" x2="190" y2="84"
+                              stroke="rgba(250,248,244,.88)" stroke-width="2.2" stroke-linecap="round"/>
+                        <line x1="190" y1="190" x2="190" y2="213"
+                              stroke="rgba(250,248,244,.45)" stroke-width="2"   stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Trotteuse (secondes) -->
+                    <g id="s-hand">
+                        <line x1="190" y1="190" x2="190" y2="72"
+                              stroke="var(--gold)" stroke-width="1" stroke-linecap="round"/>
+                        <line x1="190" y1="190" x2="190" y2="220"
+                              stroke="var(--gold)" stroke-width="1" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Centre -->
+                    <circle cx="190" cy="190" r="5.5" fill="var(--gold)"/>
+                    <circle cx="190" cy="190" r="2.5" fill="#111111"/>
+                </svg>
+            </div>
+
+            <div class="hero-video-wrap">
+                <video src="video/omegaW.mp4" autoplay muted loop playsinline></video>
+                <div class="hero-video-overlay" aria-hidden="true"></div>
+            </div>
+            </div><!-- /.hero-right -->
+
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TICKER BOURSIER
+============================================================ -->
+<div id="ticker" role="marquee" aria-label="Cours des montres en temps réel" aria-live="off">
+    <div class="ticker-track" aria-hidden="true">
+        <!-- Contenu × 2 pour boucle seamless -->
+        <span class="tick-item"><span class="tick-ref">ROLEX Submariner</span><span class="tick-up">▲ +4.2%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">PATEK Calatrava</span><span class="tick-up">▲ +2.8%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">AP Royal Oak</span><span class="tick-up">▲ +6.1%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">OMEGA Speedmaster</span><span class="tick-dn">▼ −0.3%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">IWC Portugaise</span><span class="tick-up">▲ +1.9%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">CARTIER Santos</span><span class="tick-up">▲ +3.4%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">ROLEX Submariner</span><span class="tick-up">▲ +4.2%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">PATEK Calatrava</span><span class="tick-up">▲ +2.8%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">AP Royal Oak</span><span class="tick-up">▲ +6.1%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">OMEGA Speedmaster</span><span class="tick-dn">▼ −0.3%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">IWC Portugaise</span><span class="tick-up">▲ +1.9%</span></span><span class="tick-sep">|</span>
+        <span class="tick-item"><span class="tick-ref">CARTIER Santos</span><span class="tick-up">▲ +3.4%</span></span><span class="tick-sep">|</span>
+    </div>
+</div>
+
+<!-- ============================================================
+     MARQUEE
+============================================================ -->
+<div id="marquee" role="region" aria-label="Marques disponibles">
+    <div class="mq-track" aria-hidden="true">
+        <span class="mq-item">Rolex</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Patek Philippe</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Audemars Piguet</span><span class="mq-dot">◆</span>
+        <span class="mq-item">IWC</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Omega</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Cartier</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Breitling</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Jaeger-LeCoultre</span><span class="mq-dot">◆</span>
+        <!-- Duplication pour boucle seamless -->
+        <span class="mq-item">Rolex</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Patek Philippe</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Audemars Piguet</span><span class="mq-dot">◆</span>
+        <span class="mq-item">IWC</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Omega</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Cartier</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Breitling</span><span class="mq-dot">◆</span>
+        <span class="mq-item">Jaeger-LeCoultre</span><span class="mq-dot">◆</span>
+    </div>
+</div>
+
+<!-- ============================================================
+     COLLECTION
+============================================================ -->
+<section id="collection">
+    <div class="container">
+        <div class="col-hd">
+            <div>
+                <p class="sec-label reveal">Pièces d'exception</p>
+                <h2 class="sec-title reveal">Sélection du moment</h2>
+            </div>
+            <a href="#" class="btn btn-ghost reveal">Voir tout →</a>
+        </div>
+
+        <div class="filter-bar" role="group" aria-label="Filtrer par marque">
+            <button class="filter-btn active" data-filter="all">Tout</button>
+            <button class="filter-btn" data-filter="Rolex">Rolex</button>
+            <button class="filter-btn" data-filter="Patek Philippe">Patek Philippe</button>
+            <button class="filter-btn" data-filter="Omega">Omega</button>
+        </div>
+
+        <div class="cards">
+
+            <!-- Carte 1 : Rolex Submariner -->
+            <article class="wcard reveal" data-brand="Rolex">
+                <div class="wimg">
+                    <img src="photo/rolex.jpg"
+                         alt="Rolex Submariner Date — montre de luxe d'occasion certifiée"
+                         loading="lazy" width="400" height="260">
+                    <div class="woverlay">
+                        <a href="#" class="btn btn-primary" style="font-size:.75rem;padding:.7rem 1.5rem;">Voir le détail</a>
+                    </div>
+                    <div class="wtooltip" aria-hidden="true">
+                        <div class="wtt-info">2022 &nbsp;·&nbsp; Excellent</div>
+                        <div class="wtt-cert">✓ Certifié WatchVault</div>
+                    </div>
+                </div>
+                <div class="winfo">
+                    <div class="wbrand">Rolex</div>
+                    <div class="wname">Submariner Date</div>
+                    <div class="wref">Réf. 126610LN — 41 mm</div>
+                    <div class="wfoot">
+                        <div class="wprice" data-count="18400" data-suffix=" €" data-sep=" ">18 400 €</div>
+                        <span class="badge b-cert">Certifiée</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Carte 2 : Patek Philippe Calatrava -->
+            <article class="wcard reveal" data-brand="Patek Philippe">
+                <div class="wimg">
+                    <img src="photo/patek.jpg"
+                         alt="Patek Philippe Calatrava — montre de luxe d'occasion certifiée"
+                         loading="lazy" width="400" height="260">
+                    <div class="woverlay">
+                        <a href="#" class="btn btn-primary" style="font-size:.75rem;padding:.7rem 1.5rem;">Voir le détail</a>
+                    </div>
+                    <div class="wtooltip" aria-hidden="true">
+                        <div class="wtt-info">2019 &nbsp;·&nbsp; Très bon</div>
+                        <div class="wtt-cert">✓ Certifié WatchVault</div>
+                    </div>
+                </div>
+                <div class="winfo">
+                    <div class="wbrand">Patek Philippe</div>
+                    <div class="wname">Calatrava</div>
+                    <div class="wref">Réf. 5196G — 37 mm Or blanc</div>
+                    <div class="wfoot">
+                        <div class="wprice" data-count="32800" data-suffix=" €" data-sep=" ">32 800 €</div>
+                        <span class="badge b-rare">Rare</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Carte 3 : Omega Speedmaster -->
+            <article class="wcard reveal" data-brand="Omega">
+                <div class="wimg">
+                    <img src="photo/omega.jpg"
+                         alt="Omega Speedmaster Professional — montre de luxe d'occasion certifiée"
+                         loading="lazy" width="400" height="260">
+                    <div class="woverlay">
+                        <a href="#" class="btn btn-primary" style="font-size:.75rem;padding:.7rem 1.5rem;">Voir le détail</a>
+                    </div>
+                    <div class="wtooltip" aria-hidden="true">
+                        <div class="wtt-info">2021 &nbsp;·&nbsp; Excellent</div>
+                        <div class="wtt-cert">✓ Certifié WatchVault</div>
+                    </div>
+                </div>
+                <div class="winfo">
+                    <div class="wbrand">Omega</div>
+                    <div class="wname">Speedmaster Professional</div>
+                    <div class="wref">Réf. 310.30.42.50.01.001 — 42 mm</div>
+                    <div class="wfoot">
+                        <div class="wprice" data-count="8900" data-suffix=" €" data-sep=" ">8 900 €</div>
+                        <span class="badge b-cert">Certifiée</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     COMMENT ÇA MARCHE
+============================================================ -->
+<section id="hiw">
+    <div class="container">
+        <div class="hiw-hd">
+            <p class="sec-label reveal">Notre processus</p>
+            <h2 class="sec-title reveal">Comment ça marche</h2>
+            <div class="divider reveal"></div>
+        </div>
+
+        <div class="steps">
+            <div class="step reveal">
+                <span class="step-n" aria-hidden="true">01</span>
+                <div class="step-ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </div>
+                <h3 class="step-t">Sélectionnez</h3>
+                <p class="step-d">Parcourez notre catalogue de plus de 4 200 montres certifiées, filtrées par marque, prix ou complication.</p>
+            </div>
+
+            <div class="step reveal">
+                <span class="step-n" aria-hidden="true">02</span>
+                <div class="step-ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                </div>
+                <h3 class="step-t">Authentifiez</h3>
+                <p class="step-d">Chaque pièce est inspectée par nos horlogers certifiés. Authenticité, état et historique vérifiés minutieusement.</p>
+            </div>
+
+            <div class="step reveal">
+                <span class="step-n" aria-hidden="true">03</span>
+                <div class="step-ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                </div>
+                <h3 class="step-t">Paiement sécurisé</h3>
+                <p class="step-d">Transaction protégée par notre service escrow. Le paiement n'est libéré qu'après réception et validation de la montre.</p>
+            </div>
+
+            <div class="step reveal">
+                <span class="step-n" aria-hidden="true">04</span>
+                <div class="step-ico" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 class="step-t">Livraison & Garantie</h3>
+                <p class="step-d">Livraison 48h en coffret sécurisé, garantie 12 mois WatchVault et certificat d'authenticité inclus.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+============================================================ -->
+<section id="testimonials">
+    <div class="container">
+
+        <div class="testi-hd">
+            <p class="sec-label reveal">Avis clients</p>
+            <h2 class="sec-title reveal">Ils nous font confiance</h2>
+            <div class="divider reveal"></div>
+        </div>
+
+        <div class="testi-grid">
+
+            <!-- Avis 1 : Pierre M. -->
+            <div class="tcard reveal">
+                <div class="tcard-top">
+                    <div class="tavatar" aria-hidden="true">PM</div>
+                    <div>
+                        <div class="tname">Pierre M.</div>
+                        <div class="tcity">Genève</div>
+                    </div>
+                </div>
+                <div class="tstars" aria-label="5 étoiles sur 5">
+                    <span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span>
+                </div>
+                <p class="ttext">« J'ai vendu ma Rolex en 48h, expertise sérieuse et prix juste. Je recommande vivement. »</p>
+            </div>
+
+            <!-- Avis 2 : Sophie L. -->
+            <div class="tcard reveal">
+                <div class="tcard-top">
+                    <div class="tavatar" aria-hidden="true">SL</div>
+                    <div>
+                        <div class="tname">Sophie L.</div>
+                        <div class="tcity">Paris</div>
+                    </div>
+                </div>
+                <div class="tstars" aria-label="5 étoiles sur 5">
+                    <span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span>
+                </div>
+                <p class="ttext">« Achat d'une Patek Philippe en toute confiance, le certificat d'authenticité est vraiment rassurant. »</p>
+            </div>
+
+            <!-- Avis 3 : Marc D. -->
+            <div class="tcard reveal">
+                <div class="tcard-top">
+                    <div class="tavatar" aria-hidden="true">MD</div>
+                    <div>
+                        <div class="tname">Marc D.</div>
+                        <div class="tcity">Zurich</div>
+                    </div>
+                </div>
+                <div class="tstars" aria-label="5 étoiles sur 5">
+                    <span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span>
+                </div>
+                <p class="ttext">« Service premium, livraison rapide, ma montre était exactement comme décrite. Parfait. »</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     MARQUES
+============================================================ -->
+<section id="brands">
+    <div class="container">
+        <div class="brands-hd">
+            <p class="sec-label reveal">Notre sélection</p>
+            <h2 class="sec-title reveal">Les plus grandes maisons</h2>
+        </div>
+
+        <div class="brands-grid reveal">
+            <div class="brand-item"><div class="brand-n">Rolex</div><div class="brand-c">Genève</div></div>
+            <div class="brand-item"><div class="brand-n">Patek Philippe</div><div class="brand-c">Genève</div></div>
+            <div class="brand-item"><div class="brand-n">Audemars Piguet</div><div class="brand-c">Le Brassus</div></div>
+            <div class="brand-item"><div class="brand-n">IWC</div><div class="brand-c">Schaffhouse</div></div>
+            <div class="brand-item"><div class="brand-n">Omega</div><div class="brand-c">Biel/Bienne</div></div>
+            <div class="brand-item"><div class="brand-n">Cartier</div><div class="brand-c">Paris</div></div>
+            <div class="brand-item"><div class="brand-n">Breitling</div><div class="brand-c">Grenchen</div></div>
+            <div class="brand-item"><div class="brand-n">Jaeger-LeCoultre</div><div class="brand-c">Le Sentier</div></div>
+            <div class="brand-item"><div class="brand-n">Vacheron Constantin</div><div class="brand-c">Genève</div></div>
+            <div class="brand-item"><div class="brand-n">A. Lange &amp; Söhne</div><div class="brand-c">Glashütte</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FORMULAIRE D'INSCRIPTION
+============================================================ -->
+<section id="subscribe">
+    <div class="container">
+        <div class="sub-grid">
+
+            <!-- Gauche : pitch -->
+            <div>
+                <p class="sec-label reveal">Rejoindre la communauté</p>
+                <h2 class="sec-title reveal">Accès <em class="gold-italic">privilégié</em></h2>
+                <div class="divider reveal"></div>
+                <p class="reveal" style="color:var(--text-sec);line-height:1.85;margin-bottom:2rem;">
+                    Recevez en avant-première les nouvelles acquisitions, alertes prix et invitations à nos ventes privées exclusives.
+                </p>
+
+                <div class="feat reveal">
+                    <div class="feat-ico" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="feat-t"><strong>Paiements 100% sécurisés</strong><span>Service escrow certifié, cryptage bout en bout</span></div>
+                </div>
+                <div class="feat reveal">
+                    <div class="feat-ico" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <div class="feat-t"><strong>Alertes en temps réel</strong><span>Notifié dès qu'une pièce correspond à votre recherche</span></div>
+                </div>
+                <div class="feat reveal">
+                    <div class="feat-ico" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <div class="feat-t"><strong>Ventes privées réservées</strong><span>Collections exclusives accessibles aux membres inscrits</span></div>
+                </div>
+            </div>
+
+            <!-- Droite : formulaire -->
+            <div>
+                <form id="sub-form" novalidate aria-label="Formulaire d'inscription WatchVault">
+
+                    <!-- Honeypot anti-spam (invisible, hors flux) -->
+                    <div class="hp" aria-hidden="true">
+                        <label for="website">Ne pas remplir</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="fgrid">
+
+                        <!-- Prénom -->
+                        <div class="fgrp">
+                            <label for="firstname">Prénom <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="firstname" name="firstname"
+                                   placeholder="Jean" autocomplete="given-name"
+                                   required aria-required="true" aria-describedby="err-firstname">
+                            <div class="ferr" id="err-firstname" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <!-- Nom -->
+                        <div class="fgrp">
+                            <label for="lastname">Nom <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="lastname" name="lastname"
+                                   placeholder="Dupont" autocomplete="family-name"
+                                   required aria-required="true" aria-describedby="err-lastname">
+                            <div class="ferr" id="err-lastname" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="fgrp fw">
+                            <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                            <input type="email" id="email" name="email"
+                                   placeholder="jean.dupont@exemple.com" autocomplete="email"
+                                   required aria-required="true" aria-describedby="err-email">
+                            <div class="ferr" id="err-email" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <!-- Intention -->
+                        <div class="fgrp fw">
+                            <label for="intent">Je souhaite</label>
+                            <div class="sel-wrap">
+                                <select id="intent" name="intent" aria-describedby="err-intent">
+                                    <option value="">Sélectionner une option</option>
+                                    <option value="acheter">Acheter une montre</option>
+                                    <option value="vendre">Vendre une montre</option>
+                                    <option value="investir">Investir dans l'horlogerie</option>
+                                    <option value="explorer">Explorer la collection</option>
+                                </select>
+                            </div>
+                            <div class="ferr" id="err-intent" role="alert" aria-live="polite"></div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn-sub" id="sub-btn">
+                        <div class="spin" aria-hidden="true"></div>
+                        <span class="btn-txt">Rejoindre WatchVault</span>
+                    </button>
+
+                    <div class="fmsg" id="fmsg" role="alert" aria-live="assertive"></div>
+
+                    <p class="rgpd">
+                        En soumettant ce formulaire, vous acceptez notre <a href="#">politique de confidentialité</a> et nos <a href="#">CGU</a>. Données traitées conformément au RGPD. Désinscription possible à tout moment via le lien en bas de chaque email.
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer id="footer">
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="ft-brand">
+                <a href="#" class="logo" aria-label="WatchVault">Watch<span>VAULT</span></a>
+                <p class="ft-desc">La marketplace de référence pour l'achat et la vente de montres de luxe d'occasion. Expertisées, authentifiées, garanties.</p>
+                <div class="ft-social">
+                    <a href="#" class="soc" aria-label="Instagram WatchVault">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+                    </a>
+                    <a href="#" class="soc" aria-label="LinkedIn WatchVault">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                    <a href="#" class="soc" aria-label="X (Twitter) WatchVault">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="ft-col">
+                <h4>Explorer</h4>
+                <ul class="ft-links">
+                    <li><a href="#collection">Toute la collection</a></li>
+                    <li><a href="#">Nouveautés</a></li>
+                    <li><a href="#">Pièces rares</a></li>
+                    <li><a href="#">Offres du moment</a></li>
+                    <li><a href="#">Guide d'achat</a></li>
+                </ul>
+            </div>
+
+            <div class="ft-col">
+                <h4>Marques</h4>
+                <ul class="ft-links">
+                    <li><a href="#">Rolex</a></li>
+                    <li><a href="#">Patek Philippe</a></li>
+                    <li><a href="#">Audemars Piguet</a></li>
+                    <li><a href="#">IWC</a></li>
+                    <li><a href="#">Omega</a></li>
+                </ul>
+            </div>
+
+            <div class="ft-col">
+                <h4>Société</h4>
+                <ul class="ft-links">
+                    <li><a href="#">À propos</a></li>
+                    <li><a href="#">Notre expertise</a></li>
+                    <li><a href="#">Vendre une montre</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Mentions légales</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="ft-bot">
+            <p class="ft-copy">© 2024 WatchVault. Tous droits réservés.</p>
+            <nav class="ft-leg" aria-label="Liens légaux">
+                <a href="#">Confidentialité</a>
+                <a href="#">CGU</a>
+                <a href="#">Cookies</a>
+            </nav>
+        </div>
+    </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+/* ============================================================
+   1. CURSEUR PERSONNALISÉ
+============================================================ */
+(function initCursor() {
+    const dot  = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    if (!dot || !ring) return;
+
+    let mx = -200, my = -200;
+    let rx = -200, ry = -200;
+    let visible = false;
+
+    window.addEventListener('mousemove', e => {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!visible) {
+            dot.style.opacity  = '1';
+            ring.style.opacity = '0.55';
+            visible = true;
+        }
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+        dot.style.opacity = ring.style.opacity = '0';
+        visible = false;
+    });
+    window.addEventListener('mouseenter', () => {
+        dot.style.opacity  = '1';
+        ring.style.opacity = '0.55';
+        visible = true;
+    });
+
+    /* Dot suit instantanément, ring lissé via rAF */
+    (function loop() {
+        dot.style.transform  = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
+        rx += (mx - rx) * 0.13;
+        ry += (my - ry) * 0.13;
+        ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+        requestAnimationFrame(loop);
+    })();
+
+    /* Agrandir l'anneau sur les éléments interactifs */
+    document.querySelectorAll('a, button, .wcard, .brand-item, .step').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = ring.style.height = '52px';
+            ring.style.opacity = '0.9';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = ring.style.height = '36px';
+            ring.style.opacity = '0.55';
+        });
+    });
+})();
+
+/* ============================================================
+   2. NAVBAR — SCROLL + BURGER MOBILE
+============================================================ */
+const nav       = document.getElementById('nav');
+const burger    = document.getElementById('burger');
+const navLinks  = document.getElementById('nav-links');
+
+window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+burger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+});
+
+navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+    });
+});
+
+/* ============================================================
+   3. HORLOGE TEMPS RÉEL
+============================================================ */
+/* Génération des graduations minutes (60 barres) via JS */
+(function buildMinTicks() {
+    const g = document.getElementById('min-ticks');
+    if (!g) return;
+    for (let i = 0; i < 60; i++) {
+        if (i % 5 === 0) continue; // les heures ont déjà des barres épaisses
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', '190');
+        line.setAttribute('y1', '26');
+        line.setAttribute('x2', '190');
+        line.setAttribute('y2', '36');
+        line.setAttribute('transform', `rotate(${i * 6} 190 190)`);
+        g.appendChild(line);
+    }
+})();
+
+/* Mise à jour des aiguilles chaque seconde */
+function tickClock() {
+    const now  = new Date();
+    const sec  = now.getSeconds();
+    const min  = now.getMinutes();
+    const hr   = now.getHours() % 12;
+
+    const sDeg = sec * 6;
+    const mDeg = min * 6 + sec * 0.1;
+    const hDeg = hr  * 30 + min * 0.5;
+
+    const hH = document.getElementById('h-hand');
+    const mH = document.getElementById('m-hand');
+    const sH = document.getElementById('s-hand');
+
+    if (hH) hH.setAttribute('transform', `rotate(${hDeg} 190 190)`);
+    if (mH) mH.setAttribute('transform', `rotate(${mDeg} 190 190)`);
+    if (sH) sH.setAttribute('transform', `rotate(${sDeg} 190 190)`);
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+/* ============================================================
+   4. SCROLL REVEAL — IntersectionObserver
+============================================================ */
+const revealEls = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -24px 0px' });
+
+/* Délai en cascade pour les éléments frères */
+revealEls.forEach(el => {
+    const sibs = Array.from(el.parentElement.querySelectorAll('.reveal'));
+    const idx  = sibs.indexOf(el);
+    el.style.transitionDelay = (idx * 75) + 'ms';
+    observer.observe(el);
+});
+
+/* ============================================================
+   5. FORMULAIRE — VALIDATION TEMPS RÉEL
+============================================================ */
+/* Règles par champ */
+const RULES = {
+    firstname: {
+        test: v => v.trim().length >= 2,
+        msg:  'Prénom requis (minimum 2 caractères).'
+    },
+    lastname: {
+        test: v => v.trim().length >= 2,
+        msg:  'Nom requis (minimum 2 caractères).'
+    },
+    email: {
+        test: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+        msg:  'Adresse email invalide (ex : nom@domaine.com).'
+    }
+};
+
+/**
+ * Valide un champ et met à jour l'affichage de l'erreur.
+ * @param {HTMLInputElement} input
+ * @param {boolean} forceShow - Montrer l'erreur même si le champ est vide
+ * @returns {boolean}
+ */
+function validateField(input, forceShow = false) {
+    const name    = input.name;
+    const val     = input.value;
+    const rule    = RULES[name];
+    const errEl   = document.getElementById('err-' + name);
+    if (!rule) return true;
+
+    const hasVal  = val.length > 0;
+    const isValid = rule.test(val);
+
+    input.classList.toggle('valid', isValid && hasVal);
+    input.classList.toggle('error', !isValid && (hasVal || forceShow));
+
+    if (errEl) {
+        if (!isValid && (hasVal || forceShow)) {
+            errEl.textContent = rule.msg;
+            errEl.classList.add('show');
+        } else {
+            errEl.textContent = '';
+            errEl.classList.remove('show');
+        }
+    }
+    return isValid;
+}
+
+/* Écouter les frappes en temps réel (événement input) */
+['firstname', 'lastname', 'email'].forEach(name => {
+    const el = document.getElementById(name);
+    if (!el) return;
+    el.addEventListener('input', () => validateField(el));
+    el.addEventListener('blur',  () => validateField(el, true));
+});
+
+/* ============================================================
+   6. FORMULAIRE — SOUMISSION ASYNC
+============================================================ */
+const subForm = document.getElementById('sub-form');
+const subBtn  = document.getElementById('sub-btn');
+const fmsg    = document.getElementById('fmsg');
+
+/* Affiche un message de retour */
+function showMsg(text, type) {
+    fmsg.textContent = text;
+    fmsg.className   = 'fmsg ' + type;
+}
+
+/* Bascule l'état loading du bouton */
+function setLoading(on) {
+    subBtn.classList.toggle('loading', on);
+    subBtn.disabled = on;
+}
+
+/* Réinitialise le formulaire après succès */
+function resetForm() {
+    subForm.reset();
+    subForm.querySelectorAll('input, select').forEach(el => {
+        el.classList.remove('valid', 'error');
+    });
+    subForm.querySelectorAll('.ferr').forEach(el => {
+        el.textContent = '';
+        el.classList.remove('show');
+    });
+}
+
+subForm.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    /* — Vérification honeypot — */
+    const hp = document.getElementById('website');
+    if (hp && hp.value) {
+        showMsg('✓ Parfait ! Vérifiez votre boîte mail.', 'ok');
+        return;
+    }
+
+    /* — Validation complète avant envoi — */
+    let ok = true;
+    ['firstname', 'lastname', 'email'].forEach(name => {
+        const el = document.getElementById(name);
+        if (!validateField(el, true) || !el.value.trim()) ok = false;
+    });
+    if (!ok) return;
+
+    /* — Préparation payload — */
+    const payload = {
+        firstname: document.getElementById('firstname').value.trim(),
+        lastname:  document.getElementById('lastname').value.trim(),
+        email:     document.getElementById('email').value.trim(),
+        intent:    document.getElementById('intent').value || 'explorer'
+    };
+
+    setLoading(true);
+    fmsg.className = 'fmsg'; // masquer ancien message
+
+    try {
+        const res  = await fetch('http://localhost:3000/subscribe', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+            const msg = data.pending
+                ? '✉ Un email de confirmation vous a été envoyé. Cliquez sur le lien pour activer votre inscription.'
+                : '✓ Inscription confirmée ! Vérifiez votre boîte mail.';
+            showMsg(msg, 'ok');
+            resetForm();
+        } else if (res.status === 409) {
+            showMsg(data.message || 'Cette adresse email est déjà inscrite.', 'err');
+        } else {
+            showMsg(data.message || '⚠ Erreur serveur, veuillez réessayer.', 'err');
+        }
+    } catch {
+        /* Serveur absent → mode démonstration */
+        showMsg('✉ Un email de confirmation vous a été envoyé. Cliquez sur le lien pour activer votre inscription.', 'ok');
+        resetForm();
+    } finally {
+        setLoading(false);
+    }
+});
+
+/* ============================================================
+   7. COMPTAGE ANIMÉ — stats hero et prix des cartes
+============================================================ */
+function animateCount(el) {
+    const target   = parseInt(el.dataset.count, 10);
+    const suffix   = el.dataset.suffix || '';
+    const sep      = el.dataset.sep    || '';
+    const duration = 3500;
+    const start    = performance.now();
+
+    function step(now) {
+        const t     = Math.min((now - start) / duration, 1);
+        const ease  = 1 - Math.pow(1 - t, 3); /* cubic ease-out */
+        const value = Math.round(ease * target);
+        el.textContent = sep
+            ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep) + suffix
+            : value + suffix;
+        if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+const countObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        animateCount(entry.target);
+        countObserver.unobserve(entry.target);
+    });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+/* ============================================================
+   8. DÉTECTION ?confirmed=true — bannière post double opt-in
+============================================================ */
+(function checkConfirmed() {
+    const params  = new URLSearchParams(window.location.search);
+    if (params.get('confirmed') !== 'true') return;
+
+    const banner = document.getElementById('confirmed-banner');
+    banner.classList.add('visible');
+
+    /* Scroll vers le haut pour que la bannière soit visible */
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    /* Auto-fermeture après 8 secondes */
+    setTimeout(() => banner.classList.remove('visible'), 8000);
+
+    /* Nettoyer l'URL sans rechargement */
+    history.replaceState(null, '', window.location.pathname);
+})();
+
+/* ============================================================
+   9. BARRE DE PROGRESSION DE LECTURE
+============================================================ */
+(function initReadBar() {
+    const bar = document.getElementById('read-bar');
+    if (!bar) return;
+    let ticking = false;
+    function update() {
+        const scrolled = window.scrollY;
+        const total    = document.documentElement.scrollHeight - window.innerHeight;
+        const pct      = total > 0 ? (scrolled / total) * 100 : 0;
+        bar.style.height = pct + '%';
+        ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        requestAnimationFrame(update);
+        ticking = true;
+    }, { passive: true });
+})();
+
+/* ============================================================
+   10. PARALLAX HERO — colonne gauche glisse à 0.2× la vitesse
+============================================================ */
+(function initParallax() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    const heroLeft = document.querySelector('#hero .hero-left');
+    if (!heroLeft) return;
+    let ticking = false;
+    function onScroll() {
+        if (ticking) return;
+        requestAnimationFrame(() => {
+            const y = window.scrollY;
+            heroLeft.style.transform = `translateY(${y * 0.20}px)`;
+            ticking = false;
+        });
+        ticking = true;
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+/* ============================================================
+   11. MAGNETIC BUTTONS
+============================================================ */
+(function initMagnetic() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.querySelectorAll('.btn-primary, .btn-outline, .btn-sub').forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+            const r  = btn.getBoundingClientRect();
+            const dx = e.clientX - (r.left + r.width  / 2);
+            const dy = e.clientY - (r.top  + r.height / 2);
+            btn.style.transform    = `translate(${dx * 0.28}px, ${dy * 0.28}px)`;
+            btn.style.transition   = 'transform 0.1s ease';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform  = '';
+            btn.style.transition = 'transform 0.45s cubic-bezier(.23,1,.32,1)';
+        });
+    });
+})();
+
+/* ============================================================
+   12. 3D CARD TILT
+============================================================ */
+(function initTilt() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.querySelectorAll('.wcard').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r  = card.getBoundingClientRect();
+            const x  = (e.clientX - r.left)  / r.width  - 0.5;
+            const y  = (e.clientY - r.top)   / r.height - 0.5;
+            card.style.transform  = `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 8}deg) scale(1.02)`;
+            card.style.transition = 'transform 0.1s ease';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform  = '';
+            card.style.transition = 'transform 0.5s cubic-bezier(.23,1,.32,1)';
+        });
+    });
+})();
+
+/* ============================================================
+   13. HIW CASCADE — délai 160 ms entre chaque étape
+============================================================ */
+(function initHiwCascade() {
+    document.querySelectorAll('.step').forEach((step, i) => {
+        step.style.transitionDelay = `${i * 160}ms`;
+    });
+})();
+
+/* ============================================================
+   14. FILTRE COLLECTION
+============================================================ */
+(function initFilter() {
+    const btns  = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.wcard');
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const brand = btn.dataset.filter;
+
+            cards.forEach(card => {
+                const matches = brand === 'all' || card.dataset.brand === brand;
+
+                if (matches) {
+                    /* Rendre visible avant d'animer pour permettre la transition */
+                    card.style.display = '';
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        card.classList.remove('card-out');
+                    }));
+                } else {
+                    card.classList.add('card-out');
+                    card.addEventListener('transitionend', () => {
+                        if (card.classList.contains('card-out')) card.style.display = 'none';
+                    }, { once: true });
+                }
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>

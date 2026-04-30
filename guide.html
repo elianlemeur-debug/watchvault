@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>L'Art d'Investir dans les Montres de Prestige — WatchVault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        @page { size: A4; margin: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
+        body { font-family: 'Barlow', system-ui, sans-serif; font-weight: 300; width: 210mm; margin: 0 auto; }
+
+        /* ── PAGES ── */
+        .page {
+            width: 210mm; height: 297mm;
+            position: relative; overflow: hidden;
+            page-break-after: always; break-after: page;
+            background: #FAFAF5;
+        }
+        .page.dark { background: #0D0D0D; }
+        .page:last-child { page-break-after: avoid; break-after: avoid; }
+
+        /* ── LAYOUT ── */
+        .page-inner { padding: 12mm 15mm; height: 100%; display: flex; flex-direction: column; }
+
+        .page-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(74,127,212,.2);
+            padding-bottom: 3.5mm; margin-bottom: 8mm;
+        }
+        .page-header-logo { font-family: 'Cormorant Garamond', serif; font-size: 10pt; letter-spacing: .15em; color: #0D0D0D; }
+        .page-header-logo span { color: #4A7FD4; }
+        .page-header-sub { font-size: 6pt; letter-spacing: .18em; text-transform: uppercase; color: #888; }
+
+        .page-footer {
+            margin-top: auto; display: flex; justify-content: space-between;
+            border-top: 1px solid rgba(74,127,212,.15); padding-top: 3mm;
+        }
+        .page-footer span { font-size: 6.5pt; color: rgba(85,85,85,.5); letter-spacing: .08em; }
+
+        /* ── TYPO ── */
+        .sec-label { font-size: 6pt; letter-spacing: .3em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 2.5mm; }
+        .sec-title { font-family: 'Cormorant Garamond', serif; font-size: 26pt; font-weight: 400; line-height: 1.1; color: #0D0D0D; margin-bottom: 3.5mm; }
+        .sec-title em { font-style: italic; color: #4A7FD4; }
+        .divider { width: 38mm; height: 1px; background: #4A7FD4; margin: 3mm 0; }
+        .body-text { font-size: 9pt; line-height: 1.75; color: #555; }
+
+        /* ── COVER ── */
+        .cover-wrap { position: absolute; inset: 0; padding: 16mm; display: flex; flex-direction: column; }
+        .cover-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(74,127,212,.25); padding-bottom: 5mm; margin-bottom: 10mm; }
+        .cover-logo { font-family: 'Cormorant Garamond', serif; font-size: 20pt; letter-spacing: .15em; color: #F5F0E8; }
+        .cover-logo span { color: #4A7FD4; }
+        .cover-year { font-size: 7pt; letter-spacing: .25em; text-transform: uppercase; color: rgba(245,240,232,.45); margin-top: 2mm; }
+        .cover-main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .cover-label { font-size: 6.5pt; letter-spacing: .3em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 7mm; }
+        .cover-h1 { font-family: 'Cormorant Garamond', serif; font-size: 42pt; font-weight: 300; line-height: 1.05; color: #F5F0E8; margin-bottom: 6mm; }
+        .cover-h1 em { font-style: italic; color: #4A7FD4; }
+        .cover-line { width: 48mm; height: 1px; background: #4A7FD4; margin: 6mm 0; }
+        .cover-sub { font-size: 9.5pt; font-weight: 300; color: rgba(245,240,232,.6); line-height: 1.75; max-width: 115mm; }
+        .cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(74,127,212,.2); padding-top: 4mm; }
+        .cover-bottom span { font-size: 6.5pt; color: rgba(245,240,232,.35); letter-spacing: .08em; }
+
+        /* Déco cover */
+        .deco-ring { position: absolute; border-radius: 50%; border: 1px solid; pointer-events: none; }
+        .deco-dots { position: absolute; display: grid; grid-template-columns: repeat(5,3.5mm); grid-template-rows: repeat(4,3.5mm); gap: 2mm; }
+        .deco-dot { width: 1.2mm; height: 1.2mm; border-radius: 50%; background: rgba(74,127,212,.3); }
+        .corner { position: absolute; width: 14mm; height: 14mm; }
+        .corner-tl { top: 9mm; left: 9mm; border-top: 1px solid rgba(74,127,212,.3); border-left: 1px solid rgba(74,127,212,.3); }
+        .corner-br { bottom: 9mm; right: 9mm; border-bottom: 1px solid rgba(74,127,212,.3); border-right: 1px solid rgba(74,127,212,.3); }
+
+        /* ── PAGE 2 : INTRO ── */
+        .intro-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-bottom: 6mm; }
+        .sommaire { background: #F2EDE4; padding: 5mm 6mm; border-left: 3px solid #4A7FD4; }
+        .sommaire-title { font-size: 7pt; letter-spacing: .2em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 3.5mm; }
+        .sommaire-item { display: flex; justify-content: space-between; padding: 1.8mm 0; border-bottom: 1px dotted rgba(74,127,212,.2); }
+        .sommaire-item:last-child { border: none; }
+        .sommaire-item span:first-child { font-family: 'Cormorant Garamond', serif; font-size: 10.5pt; color: #0D0D0D; }
+        .sommaire-item span:last-child { font-size: 7.5pt; color: #4A7FD4; }
+        .kpi-row { display: flex; gap: 4mm; }
+        .kpi { flex: 1; text-align: center; padding: 4mm 3mm; border: 1px solid rgba(74,127,212,.2); }
+        .kpi-n { font-family: 'Cormorant Garamond', serif; font-size: 20pt; color: #4A7FD4; line-height: 1; margin-bottom: 1.5mm; }
+        .kpi-l { font-size: 6pt; letter-spacing: .12em; text-transform: uppercase; color: #555; line-height: 1.4; }
+
+        /* ── BRAND CARDS ── */
+        .brand-card { border: 1px solid rgba(74,127,212,.2); padding: 5mm; background: #fff; position: relative; margin-bottom: 4mm; }
+        .brand-card.accent { border-left: 3px solid #4A7FD4; }
+        .brand-card.accent2 { border-left: 3px solid #6B9FE8; }
+        .brand-ghost { font-family: 'Cormorant Garamond', serif; font-size: 32pt; font-weight: 300; color: rgba(74,127,212,.07); position: absolute; top: 0; right: 3mm; line-height: 1; }
+        .brand-name { font-size: 6pt; letter-spacing: .28em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 2mm; }
+        .brand-title { font-family: 'Cormorant Garamond', serif; font-size: 15pt; font-weight: 400; color: #0D0D0D; margin-bottom: 2.5mm; line-height: 1.15; }
+        .brand-desc { font-size: 8pt; line-height: 1.65; color: #555; margin-bottom: 3mm; }
+        .brand-tags { display: flex; gap: 2mm; flex-wrap: wrap; margin-bottom: 3mm; }
+        .tag { font-size: 6.5pt; padding: 1mm 2.5mm; border: 1px solid rgba(74,127,212,.3); color: #4A7FD4; }
+        .brand-metrics { display: flex; justify-content: space-between; border-top: 1px solid rgba(74,127,212,.15); padding-top: 2.5mm; }
+        .metric { text-align: center; }
+        .metric-n { font-family: 'Cormorant Garamond', serif; font-size: 13pt; color: #4A7FD4; line-height: 1; }
+        .metric-l { font-size: 5.5pt; letter-spacing: .08em; text-transform: uppercase; color: #888; margin-top: 1mm; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+
+        /* ── PAGE 5 : AUTHENTICITÉ ── */
+        .auth-item { display: grid; grid-template-columns: 12mm 1fr; gap: 4mm; align-items: start; padding: 5mm; background: #fff; border: 1px solid rgba(74,127,212,.15); border-left: 3px solid #4A7FD4; margin-bottom: 5mm; }
+        .auth-num { font-family: 'Cormorant Garamond', serif; font-size: 28pt; font-weight: 300; color: #4A7FD4; line-height: 1; }
+        .auth-h3 { font-family: 'Cormorant Garamond', serif; font-size: 13pt; color: #0D0D0D; margin-bottom: 2mm; }
+        .auth-p { font-size: 8pt; line-height: 1.65; color: #555; margin-bottom: 2.5mm; }
+        .auth-tip { font-size: 7.5pt; color: #0D0D0D; line-height: 1.6; padding-left: 4mm; position: relative; }
+        .auth-tip::before { content: '→'; color: #4A7FD4; position: absolute; left: 0; }
+
+        /* ── PAGE 6 : TABLE ── */
+        table { width: 100%; border-collapse: collapse; margin-top: 4mm; }
+        thead tr { background: #4A7FD4; }
+        thead th { font-family: 'Barlow', sans-serif; font-size: 6.5pt; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; padding: 3mm 3.5mm; text-align: left; color: #fff; }
+        tbody tr { border-bottom: 1px solid rgba(74,127,212,.12); }
+        tbody tr:nth-child(even) { background: rgba(74,127,212,.04); }
+        tbody td { font-size: 8pt; padding: 2.8mm 3.5mm; color: #0D0D0D; }
+        tbody td:first-child { font-family: 'Cormorant Garamond', serif; font-size: 9.5pt; }
+        .up3 { color: #2e7d32; font-weight: 500; }
+        .up2 { color: #4A7FD4; font-weight: 500; }
+        .up1 { color: #555; }
+        .flat { color: #999; }
+        .note { font-size: 6.5pt; color: #999; margin-top: 3mm; font-style: italic; }
+        .legend { display: flex; gap: 5mm; margin-top: 3.5mm; padding: 2.5mm 4mm; background: #F2EDE4; border-left: 2px solid #4A7FD4; }
+        .legend span { font-size: 7pt; }
+
+        /* ── PAGE 7 : CONTACT ── */
+        .contact-wrap { position: absolute; inset: 0; padding: 15mm; display: flex; flex-direction: column; }
+        .contact-hd { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(74,127,212,.25); padding-bottom: 4.5mm; margin-bottom: 9mm; }
+        .contact-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .contact-label { font-size: 6.5pt; letter-spacing: .3em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 5mm; }
+        .contact-h2 { font-family: 'Cormorant Garamond', serif; font-size: 34pt; font-weight: 300; color: #F5F0E8; line-height: 1.1; margin-bottom: 5mm; }
+        .contact-h2 em { font-style: italic; color: #4A7FD4; }
+        .contact-desc { font-size: 9.5pt; line-height: 1.8; color: rgba(245,240,232,.6); max-width: 108mm; margin-bottom: 7mm; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+        .contact-item { border: 1px solid rgba(74,127,212,.2); padding: 3.5mm 5mm; }
+        .contact-item-label { font-size: 6pt; letter-spacing: .22em; text-transform: uppercase; color: #4A7FD4; margin-bottom: 1.5mm; }
+        .contact-item-val { font-family: 'Cormorant Garamond', serif; font-size: 11.5pt; color: #F5F0E8; }
+        .contact-cta { display: inline-block; background: #4A7FD4; color: #fff; font-size: 7.5pt; letter-spacing: .15em; text-transform: uppercase; padding: 4mm 9mm; text-decoration: none; margin-top: 6mm; }
+        .contact-ft { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid rgba(74,127,212,.15); padding-top: 4mm; }
+        .contact-ft span { font-size: 6.5pt; color: rgba(245,240,232,.3); }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE 1 — COUVERTURE ══════════════════════ -->
+<div class="page dark">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-br"></div>
+    <div class="deco-ring" style="right:-22mm;top:45mm;width:105mm;height:105mm;border-color:rgba(74,127,212,.07);"></div>
+    <div class="deco-ring" style="right:-9mm;top:58mm;width:78mm;height:78mm;border-color:rgba(74,127,212,.11);"></div>
+    <div class="deco-ring" style="right:5mm;top:72mm;width:52mm;height:52mm;border-color:rgba(74,127,212,.15);"></div>
+    <div class="deco-dots" style="left:12mm;bottom:32mm;">
+        <div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div>
+        <div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div>
+        <div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div>
+        <div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div><div class="deco-dot"></div>
+    </div>
+    <div class="cover-wrap">
+        <div class="cover-top">
+            <div>
+                <div class="cover-logo">Watch<span>VAULT</span></div>
+                <div class="cover-year">Guide Exclusif · 2024</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:6.5pt;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.35);">Guide d'investissement</div>
+                <div style="font-size:6.5pt;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-top:1.5mm;">Horlogerie de Prestige</div>
+            </div>
+        </div>
+        <div class="cover-main">
+            <div class="cover-label">Collection Connaisseurs · Édition Limitée</div>
+            <h1 class="cover-h1">L'Art<br>d'Investir<br>dans les<br><em>Montres<br>de Prestige</em></h1>
+            <div class="cover-line"></div>
+            <p class="cover-sub">
+                Une sélection des cinq manufactures les plus rentables,
+                les critères d'authenticité essentiels et l'analyse
+                complète des tendances de marché 2024.
+            </p>
+        </div>
+        <div class="cover-bottom">
+            <span>watchvault.com · marketplace certifiée</span>
+            <span>Diffusion confidentielle — Membres WatchVault</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 2 — INTRODUCTION ══════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+        <div class="page-header">
+            <span class="page-header-logo">Watch<span>VAULT</span></span>
+            <span class="page-header-sub">L'Art d'Investir dans les Montres de Prestige</span>
+        </div>
+
+        <div class="sec-label">Avant-Propos</div>
+        <h2 class="sec-title">Le temps comme<br><em>investissement</em></h2>
+        <div class="divider" style="margin-bottom:5mm;"></div>
+
+        <div class="intro-cols">
+            <div>
+                <p class="body-text" style="margin-bottom:3.5mm;">
+                    L'horlogerie de prestige représente aujourd'hui l'une des classes
+                    d'actifs alternatives les plus performantes, combinant valeur refuge
+                    tangible et potentiel de plus-value remarquable.
+                </p>
+                <p class="body-text" style="margin-bottom:3.5mm;">
+                    Contrairement aux marchés financiers, les montres des manufactures
+                    iconiques ont démontré une résilience exceptionnelle face aux crises
+                    économiques — avec des rendements supérieurs à de nombreuses classes
+                    d'actifs conventionnelles sur la dernière décennie.
+                </p>
+                <p class="body-text">
+                    Ce guide vous accompagne dans la sélection des pièces à fort
+                    potentiel, la vérification de leur authenticité et la compréhension
+                    des dynamiques qui gouvernent le marché secondaire.
+                </p>
+            </div>
+            <div class="sommaire">
+                <div class="sommaire-title">Sommaire</div>
+                <div class="sommaire-item"><span>Les 5 Manufactures</span><span>03 — 04</span></div>
+                <div class="sommaire-item"><span>Critères d'Authenticité</span><span>05</span></div>
+                <div class="sommaire-item"><span>Tableau des Prix</span><span>06</span></div>
+                <div class="sommaire-item"><span>Contact WatchVault</span><span>07</span></div>
+            </div>
+        </div>
+
+        <div class="kpi-row">
+            <div class="kpi"><div class="kpi-n">+12%</div><div class="kpi-l">Rendement annuel moyen<br>Rolex acier 2014–2024</div></div>
+            <div class="kpi"><div class="kpi-n">×3.2</div><div class="kpi-l">Multiplication de valeur<br>Patek Nautilus 2015–2024</div></div>
+            <div class="kpi"><div class="kpi-n">4 200</div><div class="kpi-l">Références disponibles<br>sur WatchVault</div></div>
+            <div class="kpi"><div class="kpi-n">98%</div><div class="kpi-l">Taux d'authenticité<br>certifiée par nos experts</div></div>
+        </div>
+
+        <div class="page-footer">
+            <span>watchvault.com</span><span>Guide Exclusif 2024</span><span>Page 2</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 3 — MANUFACTURES 1/2 ══════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+        <div class="page-header">
+            <span class="page-header-logo">Watch<span>VAULT</span></span>
+            <span class="page-header-sub">Les 5 Manufactures les Plus Rentables</span>
+        </div>
+
+        <div class="sec-label">Sélection Expert</div>
+        <h2 class="sec-title" style="margin-bottom:5mm;">Les <em>5 manufactures</em><br>les plus rentables</h2>
+
+        <!-- Rolex -->
+        <div class="brand-card accent">
+            <div class="brand-ghost">01</div>
+            <div class="brand-name">Manufacture · Genève · depuis 1905</div>
+            <div class="brand-title">Rolex</div>
+            <p class="brand-desc">
+                La référence absolue en matière d'investissement horloger. Rolex combine une
+                liquidité inégalée, une reconnaissance mondiale et une production volontairement
+                limitée qui entretient une pression haussière permanente sur le marché secondaire.
+                Le Daytona acier et le GMT-Master II "Pepsi" s'échangent couramment à 2–3×
+                leur prix boutique.
+            </p>
+            <div class="brand-tags">
+                <span class="tag">Submariner Date</span>
+                <span class="tag">Daytona Acier</span>
+                <span class="tag">GMT-Master II Pepsi</span>
+                <span class="tag">Sky-Dweller</span>
+            </div>
+            <div class="brand-metrics">
+                <div class="metric"><div class="metric-n">+8–12%</div><div class="metric-l">Rendement annuel</div></div>
+                <div class="metric"><div class="metric-n">Maximale</div><div class="metric-l">Liquidité</div></div>
+                <div class="metric"><div class="metric-n">★★★★★</div><div class="metric-l">Profil défensif</div></div>
+                <div class="metric"><div class="metric-n">8 000 €+</div><div class="metric-l">Ticket d'entrée</div></div>
+            </div>
+        </div>
+
+        <!-- Patek Philippe -->
+        <div class="brand-card accent2">
+            <div class="brand-ghost">02</div>
+            <div class="brand-name">Manufacture · Genève · depuis 1839</div>
+            <div class="brand-title">Patek Philippe</div>
+            <p class="brand-desc">
+                "Vous ne possédez jamais une Patek Philippe, vous en êtes simplement le gardien
+                pour la prochaine génération." Le Nautilus 5711 et l'Aquanaut atteignent 3× à 10×
+                leur prix boutique, avec des performances records en ventes aux enchères mondiales.
+                La manufacture la plus valorisée de l'histoire horlogère.
+            </p>
+            <div class="brand-tags">
+                <span class="tag">Nautilus 5711</span>
+                <span class="tag">Aquanaut 5167</span>
+                <span class="tag">Calatrava 5196</span>
+                <span class="tag">Perpetual Calendar</span>
+            </div>
+            <div class="brand-metrics">
+                <div class="metric"><div class="metric-n">+15–25%</div><div class="metric-l">Rendement annuel</div></div>
+                <div class="metric"><div class="metric-n">Sélective</div><div class="metric-l">Liquidité</div></div>
+                <div class="metric"><div class="metric-n">★★★★☆</div><div class="metric-l">Profil défensif</div></div>
+                <div class="metric"><div class="metric-n">18 000 €+</div><div class="metric-l">Ticket d'entrée</div></div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>watchvault.com</span><span>Guide Exclusif 2024</span><span>Page 3</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 4 — MANUFACTURES 2/2 ══════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+        <div class="page-header">
+            <span class="page-header-logo">Watch<span>VAULT</span></span>
+            <span class="page-header-sub">Les 5 Manufactures les Plus Rentables</span>
+        </div>
+
+        <div class="two-col" style="margin-bottom:4mm;">
+            <!-- Audemars Piguet -->
+            <div class="brand-card accent" style="margin-bottom:0;">
+                <div class="brand-ghost" style="font-size:28pt;">03</div>
+                <div class="brand-name">Le Brassus · Vallée de Joux</div>
+                <div class="brand-title">Audemars Piguet</div>
+                <p class="brand-desc">
+                    Le Royal Oak (1972), première montre de luxe en acier à prix élevé, est
+                    devenu un symbole culturel. Les éditions limitées Royal Oak Offshore
+                    génèrent des rendements spectaculaires, souvent supérieurs à 30% sur
+                    les séries les plus recherchées.
+                </p>
+                <div class="brand-tags">
+                    <span class="tag">Royal Oak 15400</span>
+                    <span class="tag">Royal Oak Offshore</span>
+                </div>
+                <div class="brand-metrics">
+                    <div class="metric"><div class="metric-n">+20%</div><div class="metric-l">Rend. annuel</div></div>
+                    <div class="metric"><div class="metric-n">Forte</div><div class="metric-l">Liquidité</div></div>
+                    <div class="metric"><div class="metric-n">20 000 €+</div><div class="metric-l">Ticket d'entrée</div></div>
+                </div>
+            </div>
+            <!-- Omega -->
+            <div class="brand-card accent2" style="margin-bottom:0;">
+                <div class="brand-ghost" style="font-size:28pt;">04</div>
+                <div class="brand-name">Biel/Bienne · Suisse</div>
+                <div class="brand-title">Omega</div>
+                <p class="brand-desc">
+                    Portée sur la Lune en 1969, la Speedmaster "Moonwatch" demeure
+                    l'une des plus iconiques. Omega offre un point d'entrée accessible
+                    avec un potentiel de valorisation solide sur les éditions spéciales
+                    et les collaborations exclusives.
+                </p>
+                <div class="brand-tags">
+                    <span class="tag">Speedmaster Pro</span>
+                    <span class="tag">Seamaster 300</span>
+                </div>
+                <div class="brand-metrics">
+                    <div class="metric"><div class="metric-n">+5–10%</div><div class="metric-l">Rend. annuel</div></div>
+                    <div class="metric"><div class="metric-n">Forte</div><div class="metric-l">Liquidité</div></div>
+                    <div class="metric"><div class="metric-n">4 000 €+</div><div class="metric-l">Ticket d'entrée</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IWC full width -->
+        <div class="brand-card accent">
+            <div class="brand-ghost">05</div>
+            <div class="brand-name">Schaffhouse · Suisse · depuis 1868</div>
+            <div class="brand-title">IWC Schaffhausen</div>
+            <p class="brand-desc">
+                IWC représente le profil défensif idéal pour l'investisseur prudent.
+                La Pilot's Watch héritée des années 1940 et la Portugieser offrent une valorisation
+                stable avec une liquidité soutenue. Moins spéculatif que Rolex ou Patek, IWC délivre
+                des rendements réguliers avec une volatilité réduite — idéal pour diversifier un
+                portefeuille horloger.
+            </p>
+            <div style="display:flex;gap:5mm;align-items:center;">
+                <div class="brand-tags" style="flex:1;margin-bottom:0;">
+                    <span class="tag">Pilot's Watch Mark XI</span>
+                    <span class="tag">Portugieser Auto</span>
+                    <span class="tag">Big Pilot 5002</span>
+                    <span class="tag">Portofino</span>
+                </div>
+                <div class="brand-metrics" style="border:none;padding:0;gap:5mm;flex-shrink:0;">
+                    <div class="metric"><div class="metric-n">+5–8%</div><div class="metric-l">Rend. annuel</div></div>
+                    <div class="metric"><div class="metric-n">Bonne</div><div class="metric-l">Liquidité</div></div>
+                    <div class="metric"><div class="metric-n">Faible</div><div class="metric-l">Volatilité</div></div>
+                    <div class="metric"><div class="metric-n">5 000 €+</div><div class="metric-l">Ticket d'entrée</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Récap box -->
+        <div style="background:#F2EDE4;border-left:3px solid #4A7FD4;padding:4mm 5mm;margin-top:auto;">
+            <p style="font-size:7.5pt;color:#0D0D0D;line-height:1.7;">
+                <strong style="font-family:'Cormorant Garamond',serif;font-size:9.5pt;">Conseil WatchVault :</strong>
+                Pour un premier investissement, privilégiez Rolex (liquidité maximale) ou Omega (ticket d'entrée accessible).
+                Pour un portefeuille confirmé, intégrez Patek et AP en complément pour le potentiel de plus-value exceptionnel.
+            </p>
+        </div>
+
+        <div class="page-footer">
+            <span>watchvault.com</span><span>Guide Exclusif 2024</span><span>Page 4</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 5 — AUTHENTICITÉ ══════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+        <div class="page-header">
+            <span class="page-header-logo">Watch<span>VAULT</span></span>
+            <span class="page-header-sub">Les 3 Critères d'Authenticité Essentiels</span>
+        </div>
+
+        <div class="sec-label">Expertise & Certification</div>
+        <h2 class="sec-title">Les 3 critères<br><em>d'authenticité</em></h2>
+        <div class="divider" style="margin-bottom:6mm;"></div>
+
+        <div class="auth-item">
+            <div class="auth-num">01</div>
+            <div>
+                <div class="auth-h3">Référence & Numéro de Série</div>
+                <p class="auth-p">
+                    Chaque montre de manufacture dispose d'un numéro de série unique gravé à l'emplacement
+                    spécifique à la marque — entre les cornes pour Rolex (depuis 2005 : laser sur la glace),
+                    sur le mouvement pour Patek Philippe. La correspondance entre référence et numéro permet
+                    de dater la pièce et d'authentifier le calibre.
+                </p>
+                <div class="auth-tip">Vérifier le registre des numéros auprès de la manufacture officielle</div>
+                <div class="auth-tip">Croiser la référence gravée avec les archives et catalogues historiques</div>
+                <div class="auth-tip">Utiliser les bases Watch Report, WatchCSV et Chrono24 Certification</div>
+            </div>
+        </div>
+
+        <div class="auth-item">
+            <div class="auth-num">02</div>
+            <div>
+                <div class="auth-h3">Cadran, Mouvement & Finitions</div>
+                <p class="auth-p">
+                    Le cadran est l'élément le plus souvent falsifié. Examiner la qualité d'impression
+                    des index, la précision des gravures et la cohérence chromatique. Le mouvement doit
+                    porter les finitions propres à la manufacture : Côtes de Genève, anglages, cuvette
+                    en or. Les certifications COSC ou Superlative Chronometer attestent la précision.
+                </p>
+                <div class="auth-tip">Inspection loupe ×5 du cadran — crêtes d'index, typographie, lume</div>
+                <div class="auth-tip">Contrôle du mouvement par un horloger agréé manufacture</div>
+                <div class="auth-tip">Recherche des marquages laser Rolex : micro-couronne à 6h sur la glace</div>
+            </div>
+        </div>
+
+        <div class="auth-item">
+            <div class="auth-num">03</div>
+            <div>
+                <div class="auth-h3">Documentation & Historique Complet</div>
+                <p class="auth-p">
+                    La présence de la boîte d'origine, du certificat de garantie et des documents
+                    d'achat ("full set") représente une prime de 15 à 30% sur la valeur de revente.
+                    L'historique des révisions en centre agréé renforce la traçabilité et la valeur
+                    patrimoniale de la pièce.
+                </p>
+                <div class="auth-tip">Exiger le "full set" complet : boîte, certificat, facture d'achat originale</div>
+                <div class="auth-tip">Vérifier les tampons de date sur la carte de garantie manufacture</div>
+                <div class="auth-tip">Historique des révisions exclusivement en centre de service agréé</div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>watchvault.com</span><span>Guide Exclusif 2024</span><span>Page 5</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 6 — TABLEAU DES PRIX ══════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+        <div class="page-header">
+            <span class="page-header-logo">Watch<span>VAULT</span></span>
+            <span class="page-header-sub">Tableau des Prix et Tendances de Marché</span>
+        </div>
+
+        <div class="sec-label">Analyse de Marché</div>
+        <h2 class="sec-title">Prix moyens &<br><em>tendances 2024</em></h2>
+        <div class="divider"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Modèle</th>
+                    <th>Réf.</th>
+                    <th>Prix boutique</th>
+                    <th>Marché 2024</th>
+                    <th>Var. 5 ans</th>
+                    <th>Tendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Rolex Submariner Date</td><td style="color:#888;font-size:7pt;">126610LN</td><td>9 450 €</td><td><strong>14 200 €</strong></td><td class="up2">+50%</td><td class="up2">↑↑</td></tr>
+                <tr><td>Rolex Daytona Acier</td><td style="color:#888;font-size:7pt;">116500LN</td><td>13 150 €</td><td><strong>28 500 €</strong></td><td class="up3">+117%</td><td class="up3">↑↑↑</td></tr>
+                <tr><td>Rolex GMT-Master II Pepsi</td><td style="color:#888;font-size:7pt;">126710BLRO</td><td>10 700 €</td><td><strong>19 800 €</strong></td><td class="up2">+85%</td><td class="up2">↑↑</td></tr>
+                <tr><td>Patek Philippe Nautilus</td><td style="color:#888;font-size:7pt;">5711/1A-010</td><td>29 000 €</td><td><strong>95 000 €</strong></td><td class="up3">+227%</td><td class="up3">↑↑↑</td></tr>
+                <tr><td>Patek Philippe Aquanaut</td><td style="color:#888;font-size:7pt;">5167A-001</td><td>21 500 €</td><td><strong>48 000 €</strong></td><td class="up3">+123%</td><td class="up3">↑↑↑</td></tr>
+                <tr><td>Audemars Piguet Royal Oak</td><td style="color:#888;font-size:7pt;">15400ST</td><td>22 000 €</td><td><strong>38 000 €</strong></td><td class="up2">+73%</td><td class="up2">↑↑</td></tr>
+                <tr><td>Omega Speedmaster Pro</td><td style="color:#888;font-size:7pt;">310.30.42.50</td><td>6 900 €</td><td><strong>8 200 €</strong></td><td class="up1">+19%</td><td class="up1">↑</td></tr>
+                <tr><td>Omega Seamaster 300</td><td style="color:#888;font-size:7pt;">234.30.41.21</td><td>5 400 €</td><td><strong>6 100 €</strong></td><td class="up1">+13%</td><td class="up1">↑</td></tr>
+                <tr><td>IWC Portugieser Automatique</td><td style="color:#888;font-size:7pt;">IW500705</td><td>7 200 €</td><td><strong>8 500 €</strong></td><td class="flat">+18%</td><td class="flat">→</td></tr>
+                <tr><td>IWC Pilot's Watch Mark XX</td><td style="color:#888;font-size:7pt;">IW328201</td><td>5 100 €</td><td><strong>5 800 €</strong></td><td class="flat">+14%</td><td class="flat">→</td></tr>
+            </tbody>
+        </table>
+
+        <p class="note">* Prix indicatifs constatés sur le marché secondaire. Sources : Chrono24, WatchRecon, données internes WatchVault. État : très bon, complet (full set). Les variations passées ne préjugent pas des performances futures.</p>
+
+        <div class="legend">
+            <span><span class="up3">↑↑↑</span> Très forte hausse (+80%+)</span>
+            <span><span class="up2">↑↑</span> Hausse significative (+40%)</span>
+            <span><span class="up1">↑</span> Hausse modérée (+10/40%)</span>
+            <span><span class="flat">→</span> Stabilité (+5/15%)</span>
+        </div>
+
+        <div class="page-footer">
+            <span>watchvault.com</span><span>Guide Exclusif 2024</span><span>Page 6</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════ PAGE 7 — CONTACT ══════════════════════ -->
+<div class="page dark">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-br"></div>
+    <div class="deco-ring" style="left:-18mm;bottom:28mm;width:88mm;height:88mm;border-color:rgba(74,127,212,.08);"></div>
+    <div class="deco-ring" style="left:-6mm;bottom:40mm;width:64mm;height:64mm;border-color:rgba(74,127,212,.12);"></div>
+    <div class="contact-wrap">
+        <div class="contact-hd">
+            <div>
+                <div class="cover-logo">Watch<span>VAULT</span></div>
+                <div class="cover-year">marketplace certifiée · depuis 2012</div>
+            </div>
+            <div style="font-size:6.5pt;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.35);">Guide Exclusif 2024</div>
+        </div>
+        <div class="contact-body">
+            <div class="contact-label">Votre partenaire d'exception</div>
+            <h2 class="contact-h2">Prêt à investir<br>dans <em>l'excellence</em><br>horlogère ?</h2>
+            <p class="contact-desc">
+                WatchVault vous accompagne à chaque étape — sélection, authentification,
+                acquisition et revente. Nos experts certifiés sont disponibles pour vous
+                guider vers les pièces à fort potentiel correspondant à votre profil.
+            </p>
+            <div class="contact-grid">
+                <div class="contact-item"><div class="contact-item-label">Site web</div><div class="contact-item-val">watchvault.com</div></div>
+                <div class="contact-item"><div class="contact-item-label">Email</div><div class="contact-item-val">experts@watchvault.com</div></div>
+                <div class="contact-item"><div class="contact-item-label">Téléphone</div><div class="contact-item-val">+41 22 000 00 00</div></div>
+                <div class="contact-item"><div class="contact-item-label">Siège social</div><div class="contact-item-val">Genève, Suisse</div></div>
+            </div>
+            <div><span class="contact-cta">Explorer la collection →</span></div>
+        </div>
+        <div class="contact-ft">
+            <span>© 2024 WatchVault · Tous droits réservés</span>
+            <span>Usage exclusif réservé aux membres WatchVault</span>
+            <span>Page 7</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
