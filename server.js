@@ -181,8 +181,12 @@ function updateCsvStatus(email, newStatus) {
    NODEMAILER — Transporter + retry avec backoff exponentiel
 ============================================================ */
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: GMAIL_USER, pass: GMAIL_PASS }
+    host:   'smtp.gmail.com',
+    port:   587,
+    secure: false,           /* STARTTLS — plus fiable sur Railway que port 465 */
+    auth:   { user: GMAIL_USER, pass: GMAIL_PASS },
+    logger: true,            /* log brut SMTP dans la console Railway */
+    debug:  true             /* log tous les échanges SMTP */
 });
 
 async function sendWithRetry(mailOptions, maxRetries = 2) {
@@ -199,8 +203,12 @@ async function sendWithRetry(mailOptions, maxRetries = 2) {
             console.error(`  ✗ sendMail tentative ${attempt} échouée`);
             console.error(`    message      : ${err.message}`);
             console.error(`    code         : ${err.code}`);
+            console.error(`    errno        : ${err.errno}`);
+            console.error(`    syscall      : ${err.syscall}`);
+            console.error(`    hostname     : ${err.hostname}`);
             console.error(`    responseCode : ${err.responseCode}`);
             console.error(`    response     : ${err.response}`);
+            console.error(`    full         : ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`);
             console.error(`    stack        :\n${err.stack}`);
             if (attempt <= maxRetries) {
                 const delay = 2000 * attempt;
@@ -319,6 +327,20 @@ async function sendConfirmedEmail(firstName, email, interest, downloadUrl) {
     console.log('── Email #2 — confirmed + PDF ───────────');
     console.log('  À       :', email);
     console.log('  PDF URL :', downloadUrl);
+    console.log('  Vérification SMTP...');
+    try {
+        await transporter.verify();
+        console.log('  ✓ SMTP verify OK');
+    } catch (err) {
+        console.error('  ✗ SMTP verify ÉCHOUÉ');
+        console.error('    message  :', err.message);
+        console.error('    code     :', err.code);
+        console.error('    errno    :', err.errno);
+        console.error('    syscall  :', err.syscall);
+        console.error('    hostname :', err.hostname);
+        console.error('    full     :', JSON.stringify(err, Object.getOwnPropertyNames(err)));
+        throw err;
+    }
 
     const interestLabels = {
         acheter:  'Acheter une montre',
@@ -608,8 +630,16 @@ app.use((err, req, res, next) => {
 ensureCsvExists();
 
 app.listen(PORT, async () => {
-    console.log(`WatchVault server → http://localhost:${PORT}`);
-    console.log(`CSV subscribers   → ${CSV_PATH}`);
+    console.log('\n' + '═'.repeat(46));
+    console.log(`  WatchVault server démarré`);
+    console.log(`  PORT       : ${PORT}`);
+    console.log(`  NODE_ENV   : ${process.env.NODE_ENV || 'non défini'}`);
+    console.log(`  BASE_URL   : ${BASE_URL}`);
+    console.log(`  GMAIL_USER : ${GMAIL_USER || '[ABSENT — emails désactivés]'}`);
+    console.log(`  GMAIL_PASS : ${GMAIL_PASS ? `[défini — ${GMAIL_PASS.length} car.]` : '[ABSENT]'}`);
+    console.log(`  SMTP host  : smtp.gmail.com:587 (STARTTLS)`);
+    console.log(`  CSV        : ${CSV_PATH}`);
+    console.log('═'.repeat(46) + '\n');
     if (!GMAIL_USER) console.warn('⚠  GMAIL_USER non défini — emails désactivés.');
     await generatePdf();
 });
