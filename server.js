@@ -21,7 +21,7 @@ const PORT = 3000;
 /* ── Chemins ── */
 const CSV_PATH = path.join(__dirname, 'subscribers.csv');
 const PDF_PATH = path.join(__dirname, 'guide.pdf');
-const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+const BASE_URL = process.env.BASE_URL || 'https://watchvault-production.up.railway.app';
 
 /* ── Tokens en mémoire (TTL 24 h) ── */
 const confirmTokens  = new Map(); /* token → { expires, email, firstName, lastName, interest } */
